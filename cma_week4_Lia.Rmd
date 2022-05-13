@@ -70,10 +70,20 @@ wildschwein_joined <- inner_join(wildschwein_Rosa,wildschwein_Sabi,by="roundToQu
 #calculate distances + meet
 wildschwein_distance <- wildschwein_joined %>%
   mutate(
-    distance=euclid_dist(euclid_dist(ERosa,ESabi),euclid_dist(NRosa,NSabi)),
+    distance=euclid_dist(euclid_dist(ERosa,NRosa),euclid_dist(ESabi,NSabi)),
     meet=ifelse(distance<=100, TRUE, FALSE)
-  )
+  ) # they meet way too often...?
 head(wildschwein_distance)
+```
+
+```{r Task 5}
+(plot1 <- ggplot() + geom_point(data=wildschwein_Rosa,aes(E,N),color="red") + geom_point(data=wildschwein_Sabi,aes(E,N),color="blue"))
+
+wildschwein_meet <- wildschwein_distance %>%
+  filter(meet==TRUE)
+
+(plot2 <- ggplot() +
+    geom_point(data=wildschwein_meet,aes(ERosa,NRosa),color="green") + geom_point(data=wildschwein_meet,aes(ESabi,NSabi),color="black"))
 ```
 
 
