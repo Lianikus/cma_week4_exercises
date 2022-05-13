@@ -51,7 +51,30 @@ wildschwein_BE_filtered <- wildschwein_BE_2056 %>%
   filter(DatetimeUTC <= "2015-04-15" & DatetimeUTC > "2015-04-01") %>% #incredibly annoying, values before 01.04. are inside the filter...
   filter(TierName == "Rosa" | TierName == "Sabi")
 ```
+```{r Task3}
+wildschwein_BE_filtered <- wildschwein_BE_filtered %>%
+  mutate(roundToQuarterHour = round_date(DatetimeUTC,"15 mins"))
+```
+```{r Task4}
+wildschwein_Sabi <- wildschwein_BE_filtered %>%
+  filter(TierName =="Sabi") %>%
+  as.data.frame()
+str(wildschwein_Sabi)
+wildschwein_Rosa <- wildschwein_BE_filtered %>%
+  filter(TierName =="Rosa") %>%
+  as.data.frame()
 
+#join data with inner_join (only matching observations are kept)
+wildschwein_joined <- inner_join(wildschwein_Rosa,wildschwein_Sabi,by="roundToQuarterHour",suffix=c("Rosa","Sabi"))
+
+#calculate distances + meet
+wildschwein_distance <- wildschwein_joined %>%
+  mutate(
+    distance=euclid_dist(euclid_dist(ERosa,ESabi),euclid_dist(NRosa,NSabi)),
+    meet=ifelse(distance<=100, TRUE, FALSE)
+  )
+head(wildschwein_distance)
+```
 
 
 ```{r pressure, echo=FALSE}
