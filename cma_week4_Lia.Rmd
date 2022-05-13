@@ -6,13 +6,50 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+library(readr)        
+library(dplyr)        
+library(ggplot2)      
+library(lubridate)
 ```
 
-## Exercise 1
+## Task 1
 
-```{r cars}
-summary(cars)
+```{r function pre-task}
+testfun <- function(){}
+testfun()
+class(testfun)
+testfun <- function(etwas){
+  print(etwas)
+}
+testfun(etwas="chli meh und doch nüt")
+my_age <- function(birthday,units){
+  difftime(Sys.time(),birthday,units=units)
+}
+my_age(birthday="1992-07-02",units="days")
+my_age("1992-07-02","days")
+my_age <- function(birthday,units="days"){
+  difftime(Sys.time(),birthday,units=units)
+}
+my_age("1992-07-02","hours")
+```
+```{r function Task 1}
+euclid_dist <- function(x,y){
+  sqrt((x-lead(x,1))^2+(y-lead(y,1))^2)
+} #x=E, y=N
+euclid_dist(c(4,6,8),c(5,1,3))
+
+sqrt((c(4,6,8)-lead(c(4,6,8),1))^2+(c(5,1,3)-lead(c(5,1,3),1))^2) #Test looks reasonable
+```
+```{r Task2}
+wildschwein_BE_2056 <- read_delim("wildschwein_BE_2056.csv")
+wildschwein_BE_filtered <- wildschwein_BE_2056 %>%
+  filter(DatetimeUTC <= "2015-04-15" & DatetimeUTC > "2015-04-01") %>% #incredibly annoying, values before 01.04. are inside the filter...
+  filter(TierName == "Rosa" | TierName == "Sabi")
 ```
 
 
